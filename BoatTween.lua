@@ -288,7 +288,9 @@ function BoatTween:Create(Object,Data)
 	
 	local TweenData = {}
 	for Property,EndValue in pairs(Goal) do
-		TweenData[Property] = TypeLerpers[typeof(EndValue)](Object[Property],EndValue)
+		
+		TweenData[Property] = TypeLerpers[typeof(EndValue)](Object, EndValue)
+		
 	end
 	
 	-- Create instances
@@ -360,7 +362,7 @@ function BoatTween:Create(Object,Data)
 					end
 				else
 					for Property,Lerper in pairs(TweenData) do
-						Object[Property] = Lerper(1)
+						--Object = Lerper(1)
 					end
 				end
 				PlaybackConnection:Disconnect()
@@ -384,7 +386,9 @@ function BoatTween:Create(Object,Data)
 					end
 				else
 					for Property,Lerper in pairs(TweenData) do
+						
 						Object[Property] = Lerper(math.clamp(TweenFunction(ElapsedTime/Time),0,1))
+						
 					end
 				end
 			end
