@@ -287,9 +287,7 @@ function BoatTween:Create(Object,Data)
 	local RepeatCount = (type(Data.RepeatCount)=="number" and math.clamp(Data.RepeatCount,-1,999999999) or 0)+1
 	
 	local TweenData = {}
-	for Property,EndValue in pairs(Goal) do
-		TweenData[Property] = TypeLerpers[typeof(EndValue)](Object[Property],EndValue)
-	end
+	
 	
 	-- Create instances
 	local CompletedEvent = Instance.new("BindableEvent")
@@ -394,6 +392,10 @@ function BoatTween:Create(Object,Data)
 	end
 	
 	function TweenObject:Play()
+		for Property,EndValue in pairs(Goal) do
+			TweenData[Property] = TypeLerpers[typeof(EndValue)](Object[Property],EndValue)
+		end
+		
 		ElapsedTime = 0
 		Play(1,false)
 	end
