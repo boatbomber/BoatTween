@@ -5,7 +5,7 @@ local BLACK_COLOR3 = Color3.new()
 -- Generic Roblox DataType lerp function.
 local function RobloxLerp(V0, V1)
 	return function(DeltaTime)
-		return V0.Position:Lerp(V1, DeltaTime)
+		return V0:Lerp(V1, DeltaTime)
 	end
 end
 
