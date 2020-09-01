@@ -419,8 +419,8 @@ function BoatTween.Create(_, Object, Data)
 		end
 
 		if DelayTime then
-			TweenObject.PlaybackState = Enum.PlaybackState.Delayed
-			Wait(DelayTime)
+			TweenObject.PlaybackState = Enum.PlaybackState.Delayed;
+			(DelayTime < 2 and Wait or wait)(DelayTime)
 		end
 
 		StartTime = os.clock() - ElapsedTime
