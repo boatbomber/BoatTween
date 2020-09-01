@@ -1,13 +1,13 @@
-local Bezier = require(script.Bezier)
+local Bezier = require(script.Parent.Bezier)
 
 local function RevBack(T)
 	T = 1 - T
-	return 1 - (math.sin(T * 1.5707963267948965579989817342720925807952880859375) +
-		(math.sin(T * 3.141592653589793115997963468544185161590576171875) *
-		(math.cos(T * 3.141592653589793115997963468544185161590576171875) + 1) / 2))
+	return 1 - (math.sin(T * 1.5707963267949) + (math.sin(T * 3.1415926535898) * (math.cos(T * 3.1415926535898) + 1) / 2))
 end
 
-local function Linear(T) return T end
+local function Linear(T)
+	return T
+end
 
 -- @specs https://material.io/guidelines/motion/duration-easing.html#duration-easing-natural-easing-curves
 local Sharp = Bezier(0.4, 0, 0.6, 1)
@@ -50,123 +50,158 @@ local function Smoother(T)
 end
 
 local function RidiculousWiggle(T)
-	return math.sin(math.sin(T * 3.141592653589793115997963468544185161590576171875) * 1.5707963267948965579989817342720925807952880859375)
+	return math.sin(math.sin(T * 3.1415926535898) * 1.5707963267949)
 end
 
 local function Spring(T)
-	return 1 + (-math.exp(-6.9 * T) * math.cos(-20.1061929829746759423869661986827850341796875 * T))
+	return 1 + (-math.exp(-6.9 * T) * math.cos(-20.106192982975 * T))
 end
 
 local function SoftSpring(T)
-	return 1 + (-math.exp(-7.5 * T) * math.cos(-10.05309649148733797119348309934139251708984375 * T))
+	return 1 + (-math.exp(-7.5 * T) * math.cos(-10.053096491487 * T))
 end
 
 local function OutBounce(T)
-	return T < 0.36363636363636364645657295113778673112392425537109375 and 7.5625 * T * T
-		or T < 0.7272727272727272929131459022755734622478485107421875 and 3 + T * (11 * T - 12) * 0.6875
-		or T < 0.90909090909090906063028114658663980662822723388671875 and 6 + T * (11 * T - 18) * 0.6875
-		or 7.875 + T * (11 * T - 21) * 0.6875
+	if T < 0.36363636363636 then
+		return 7.5625 * T * T
+	elseif T < 0.72727272727273 then
+		return 3 + T * (11 * T - 12) * 0.6875
+	elseif T < 0.090909090909091 then
+		return 6 + T * (11 * T - 18) * 0.6875
+	else
+		return 7.875 + T * (11 * T - 21) * 0.6875
+	end
 end
 
 local function InBounce(T)
-	if T > 0.63636363636363635354342704886221326887607574462890625 then
-		T = T - 1
+	if T > 0.63636363636364 then
+		T -= 1
 		return 1 - T * T * 7.5625
-	elseif T > 0.2727272727272727070868540977244265377521514892578125 then
+	elseif T > 0.272727272727273 then
 		return (11 * T - 7) * (11 * T - 3) / -16
-	elseif T > 0.0909090909090909116141432377844466827809810638427734375 then
+	elseif T > 0.090909090909091 then
 		return (11 * (4 - 11 * T) * T - 3) / 16
 	else
 		return T * (11 * T - 1) * -0.6875
 	end
 end
 
-return setmetatable({
-	Linear = Linear;
+local EasingFunctions = setmetatable({
+	InLinear = Linear;
+	OutLinear = Linear;
+	InOutLinear = Linear;
+	OutInLinear = Linear;
 
 	OutSmooth = Smooth;
 	InSmooth = Smooth;
 	InOutSmooth = Smooth;
+	OutInSmooth = Smooth;
 
 	OutSmoother = Smoother;
 	InSmoother = Smoother;
 	InOutSmoother = Smoother;
+	OutInSmoother = Smoother;
 
 	OutRidiculousWiggle = RidiculousWiggle;
 	InRidiculousWiggle = RidiculousWiggle;
 	InOutRidiculousWiggle = RidiculousWiggle;
+	OutInRidiculousWiggle = RidiculousWiggle;
 
 	OutRevBack = RevBack;
 	InRevBack = RevBack;
 	InOutRevBack = RevBack;
+	OutInRevBack = RevBack;
 
 	OutSpring = Spring;
 	InSpring = Spring;
 	InOutSpring = Spring;
+	OutInSpring = Spring;
 
 	OutSoftSpring = SoftSpring;
 	InSoftSpring = SoftSpring;
 	InOutSoftSpring = SoftSpring;
+	OutInSoftSpring = SoftSpring;
 
 	InSharp = Sharp;
 	InOutSharp = Sharp;
 	OutSharp = Sharp;
+	OutInSharp = Sharp;
 
 	InAcceleration = Acceleration;
 	InOutAcceleration = Acceleration;
 	OutAcceleration = Acceleration;
+	OutInAcceleration = Acceleration;
 
 	InStandard = Standard;
 	InOutStandard = Standard;
 	OutStandard = Standard;
+	OutInStandard = Standard;
 
 	InDeceleration = Deceleration;
 	InOutDeceleration = Deceleration;
 	OutDeceleration = Deceleration;
+	OutInDeceleration = Deceleration;
 
 	InFabricStandard = FabricStandard;
 	InOutFabricStandard = FabricStandard;
 	OutFabricStandard = FabricStandard;
+	OutInFabricStandard = FabricStandard;
 
 	InFabricAccelerate = FabricAccelerate;
 	InOutFabricAccelerate = FabricAccelerate;
 	OutFabricAccelerate = FabricAccelerate;
+	OutInFabricAccelerate = FabricAccelerate;
 
 	InFabricDecelerate = FabricDecelerate;
 	InOutFabricDecelerate = FabricDecelerate;
 	OutFabricDecelerate = FabricDecelerate;
+	OutInFabricDecelerate = FabricDecelerate;
 
 	InUWPAccelerate = UWPAccelerate;
 	InOutUWPAccelerate = UWPAccelerate;
 	OutUWPAccelerate = UWPAccelerate;
+	OutInUWPAccelerate = UWPAccelerate;
 
 	InStandardProductive = StandardProductive;
-	OutStandardProductive = StandardProductive;
-	InOutStandardProductive = StandardProductive;
-	
 	InStandardExpressive = StandardExpressive;
-	OutStandardExpressive = StandardExpressive;
-	InOutStandardExpressive = StandardExpressive;
 
 	InEntranceProductive = EntranceProductive;
-	OutEntranceProductive = EntranceProductive;
-	InOutEntranceProductive = EntranceProductive;
-	
 	InEntranceExpressive = EntranceExpressive;
-	OutEntranceExpressive = EntranceExpressive;
-	InOutEntranceExpressive = EntranceExpressive;
 
 	InExitProductive = ExitProductive;
-	OutExitProductive = ExitProductive;
-	InOutExitProductive = ExitProductive;
-	
 	InExitExpressive = ExitExpressive;
-	OutExitExpressive = ExitExpressive;	
+
+	OutStandardProductive = StandardProductive;
+	OutStandardExpressive = StandardExpressive;
+
+	OutEntranceProductive = EntranceProductive;
+	OutEntranceExpressive = EntranceExpressive;
+
+	OutExitProductive = ExitProductive;
+	OutExitExpressive = ExitExpressive;
+
+	InOutStandardProductive = StandardProductive;
+	InOutStandardExpressive = StandardExpressive;
+
+	InOutEntranceProductive = EntranceProductive;
+	InOutEntranceExpressive = EntranceExpressive;
+
+	InOutExitProductive = ExitProductive;
 	InOutExitExpressive = ExitExpressive;
+
+	OutInStandardProductive = StandardProductive;
+	OutInStandardExpressive = StandardProductive;
+
+	OutInEntranceProductive = EntranceProductive;
+	OutInEntranceExpressive = EntranceExpressive;
+
+	OutInExitProductive = ExitProductive;
+	OutInExitExpressive = ExitExpressive;
 
 	OutMozillaCurve = MozillaCurve;
 	InMozillaCurve = MozillaCurve;
 	InOutMozillaCurve = MozillaCurve;
+	OutInMozillaCurve = MozillaCurve;
 
 	InQuad = function(T)
 		return T * T
@@ -177,7 +212,21 @@ return setmetatable({
 	end;
 
 	InOutQuad = function(T)
-		return T < 0.5 and 2 * T * T or 2 * (2 - T) * T - 1
+		if T < 0.5 then
+			return 2 * T * T
+		else
+			return 2 * (2 - T) * T - 1
+		end
+	end;
+
+	OutInQuad = function(T)
+		if T < 0.5 then
+			T *= 2
+			return T * (2 - T) / 2
+		else
+			T *= 2 - 1
+			return (T * T) / 2 + 0.5
+		end
 	end;
 
 	InCubic = function(T)
@@ -189,7 +238,22 @@ return setmetatable({
 	end;
 
 	InOutCubic = function(T)
-		return T < 0.5 and 4 * T * T * T or 1 + 4 * (T - 1) * (T - 1) * (T - 1)
+		if T < 0.5 then
+			return 4 * T * T * T
+		else
+			T -= 1
+			return 1 + 4 * T * T * T
+		end
+	end;
+
+	OutInCubic = function(T)
+		if T < 0.5 then
+			T = 1 - (T * 2)
+			return (1 - T * T * T) / 2
+		else
+			T *= 2 - 1
+			return T * T * T / 2 + 0.5
+		end
 	end;
 
 	InQuart = function(T)
@@ -197,18 +261,28 @@ return setmetatable({
 	end;
 
 	OutQuart = function(T)
-		T = T - 1
+		T -= 1
 		return 1 - T * T * T * T
 	end;
 
 	InOutQuart = function(T)
 		if T < 0.5 then
-			T = T * T
+			T *= T
 			return 8 * T * T
 		else
-			T = T - 1
+			T -= 1
 			return 1 - 8 * T * T * T * T
-		end;
+		end
+	end;
+
+	OutInQuart = function(T)
+		if T < 0.5 then
+			T *= 2 - 1
+			return (1 - T * T * T * T) / 2
+		else
+			T *= 2 - 1
+			return T * T * T * T / 2 + 0.5
+		end
 	end;
 
 	InQuint = function(T)
@@ -216,7 +290,7 @@ return setmetatable({
 	end;
 
 	OutQuint = function(T)
-		T = T - 1
+		T -= 1
 		return T * T * T * T * T + 1
 	end;
 
@@ -224,9 +298,19 @@ return setmetatable({
 		if T < 0.5 then
 			return 16 * T * T * T * T * T
 		else
-			T = T - 1
+			T -= 1
 			return 16 * T * T * T * T * T + 1
-		end;
+		end
+	end;
+
+	OutInQuint = function(T)
+		if T < 0.5 then
+			T *= 2 - 1
+			return (T * T * T * T * T + 1) / 2
+		else
+			T *= 2 - 1
+			return T * T * T * T * T / 2 + 0.5
+		end
 	end;
 
 	InBack = function(T)
@@ -238,44 +322,87 @@ return setmetatable({
 	end;
 
 	InOutBack = function(T)
-		return T < 0.5 and 2 * T * T * (2 * 3 * T - 2) or 1 + 2 * (T - 1) * (T - 1) * (2 * 3 * T - 2 - 2)
+		if T < 0.5 then
+			return 2 * T * T * (2 * 3 * T - 2)
+		else
+			return 1 + 2 * (T - 1) * (T - 1) * (2 * 3 * T - 2 - 2)
+		end
+	end;
+
+	OutInBack = function(T)
+		if T < 0.5 then
+			T *= 2
+			return ((T - 1) * (T - 1) * (T * 2 + T - 1) + 1) / 2
+		else
+			T *= 2 - 1
+			return T * T * (3 * T - 2) / 2 + 0.5
+		end
 	end;
 
 	InSine = function(T)
-		return 1 - math.cos(T * 1.5707963267948965579989817342720925807952880859375)
+		return 1 - math.cos(T * 1.5707963267949)
 	end;
 
 	OutSine = function(T)
-		return math.sin(T * 1.5707963267948965579989817342720925807952880859375)
+		return math.sin(T * 1.5707963267949)
 	end;
 
 	InOutSine = function(T)
-		return (1 - math.cos(3.141592653589793115997963468544185161590576171875 * T)) / 2
+		return (1 - math.cos(3.1415926535898 * T)) / 2
+	end;
+
+	OutInSine = function(T)
+		if T < 0.5 then
+			return math.sin(T * 3.1415926535898) / 2
+		else
+			return (1 - math.cos((T * 2 - 1) * 1.5707963267949)) / 2 + 0.5
+		end
 	end;
 
 	OutBounce = OutBounce;
 	InBounce = InBounce;
 
 	InOutBounce = function(T)
-		return T < 0.5 and InBounce(2 * T) / 2 or OutBounce(2 * T - 1) / 2 + 0.5
+		if T < 0.5 then
+			return InBounce(2 * T) / 2
+		else
+			return OutBounce(2 * T - 1) / 2 + 0.5
+		end
+	end;
+
+	OutInBounce = function(T)
+		if T < 0.5 then
+			return OutBounce(2 * T) / 2
+		else
+			return InBounce(2 * T - 1) / 2 + 0.5
+		end
 	end;
 
 	InElastic = function(T)
-		return math.exp((T * 0.9638073641881153008625915390439331531524658203125 - 1) * 8) * T *
-			0.9638073641881153008625915390439331531524658203125 *
-			math.sin(4 * T * 0.9638073641881153008625915390439331531524658203125) * 1.8752275007428715891677484250976704061031341552734375
+		return math.exp((T * 0.96380736418812 - 1) * 8) * T * 0.96380736418812 * math.sin(4 * T * 0.96380736418812) * 1.8752275007429
 	end;
 
 	OutElastic = function(T)
-		return 1 +
-			(math.exp(8 * (0.9638073641881153008625915390439331531524658203125 - 0.9638073641881153008625915390439331531524658203125 * T - 1)) *
-			0.9638073641881153008625915390439331531524658203125 * (T - 1) *
-			math.sin(4 * 0.9638073641881153008625915390439331531524658203125 * (1 - T))) * 1.8752275007428715891677484250976704061031341552734375
+		return 1 + (math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (1 - T))) * 1.8752275007429
 	end;
 
 	InOutElastic = function(T)
-		return T < 0.5 and (math.exp(8 * (2 * 0.9638073641881153008625915390439331531524658203125 * T - 1)) * 0.9638073641881153008625915390439331531524658203125 * T * math.sin(2 * 4 * 0.9638073641881153008625915390439331531524658203125 * T)) * 1.8752275007428715891677484250976704061031341552734375
-			or 1 + (math.exp(8 * (0.9638073641881153008625915390439331531524658203125 * (2 - 2 * T) - 1)) * 0.9638073641881153008625915390439331531524658203125 * (T - 1) * math.sin(4 * 0.9638073641881153008625915390439331531524658203125 * (2 - 2 * T))) * 1.8752275007428715891677484250976704061031341552734375
+		if T < 0.5 then
+			return (math.exp(8 * (2 * 0.96380736418812 * T - 1)) * 0.96380736418812 * T * math.sin(2 * 4 * 0.96380736418812 * T)) * 1.8752275007429
+		else
+			return 1 + (math.exp(8 * (0.96380736418812 * (2 - 2 * T) - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (2 - 2 * T))) * 1.8752275007429
+		end
+	end;
+
+	OutInElastic = function(T)
+		-- This isn't actually correct, but it is close enough.
+		if T < 0.5 then
+			T *= 2
+			return (1 + (math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (1 - T))) * 1.8752275007429) / 2
+		else
+			T *= 2 - 1
+			return (math.exp((T * 0.96380736418812 - 1) * 8) * T * 0.96380736418812 * math.sin(4 * T * 0.96380736418812) * 1.8752275007429) / 2 + 0.5
+		end
 	end;
 
 	InExpo = function(T)
@@ -287,7 +414,21 @@ return setmetatable({
 	end;
 
 	InOutExpo = function(T)
-		return T < 0.5 and 2 * T * T * math.exp(4 * (2 * T - 1)) or 1 - 2 * (T - 1) * (T - 1) * math.exp(4 * (1 - 2 * T))
+		if T < 0.5 then
+			return 2 * T * T * math.exp(4 * (2 * T - 1))
+		else
+			return 1 - 2 * (T - 1) * (T - 1) * math.exp(4 * (1 - 2 * T))
+		end
+	end;
+
+	OutInExpo = function(T)
+		if T < 0.5 then
+			T *= 2
+			return (1 - (1 - T) * (1 - T) / math.exp(4 * T)) / 2
+		else
+			T *= 2 - 1
+			return (T * T * math.exp(4 * (T - 1))) / 2 + 0.5
+		end
 	end;
 
 	InCirc = function(T)
@@ -295,21 +436,33 @@ return setmetatable({
 	end;
 
 	OutCirc = function(T)
-		T = T - 1
+		T -= 1
 		return math.sqrt(1 - T * T)
 	end;
 
 	InOutCirc = function(T)
-		T = T * 2
+		T *= 2
 		if T < 1 then
 			return -(math.sqrt(1 - T * T) - 1) / 2
 		else
-			T = T - 2
+			T -= 2
 			return (math.sqrt(1 - T * T) - 1) / 2
+		end
+	end;
+
+	OutInCirc = function(T)
+		if T < 0.5 then
+			T *= 2 - 1
+			return math.sqrt(1 - T * T) / 2
+		else
+			T *= 2 - 1
+			return (-(math.sqrt(1 - T * T) - 1)) / 2 + 0.5
 		end
 	end;
 }, {
 	__index = function(_, Index)
-		error(tostring(Index) .. " is not a valid easing style.", 2)
+		error(tostring(Index) .. " is not a valid easing function.", 2)
 	end;
 })
+
+return EasingFunctions
