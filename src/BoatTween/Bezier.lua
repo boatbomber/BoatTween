@@ -35,21 +35,21 @@ local function Bezier(X1, Y1, X2, Y2)
 		local CurrentSample = 1
 
 		while CurrentSample ~= 10 and SampleValues[CurrentSample] <= T do
-			IntervalStart = IntervalStart + 0.1
-			CurrentSample = CurrentSample + 1
+			IntervalStart += 0.1
+			CurrentSample += 1
 		end
 
-		CurrentSample = CurrentSample - 1
+		CurrentSample -= 1
 
 		local Dist = (T - SampleValues[CurrentSample]) / (SampleValues[CurrentSample + 1] - SampleValues[CurrentSample])
 		local GuessForT = IntervalStart + Dist / 10
-
 		local InitialSlope = 3 * (1 - 3 * X2 + 3 * X1) * GuessForT * GuessForT + 2 * (3 * X2 - 6 * X1) * GuessForT + (3 * X1)
+
 		if InitialSlope >= 0.001 then
 			for _ = 0, 3 do
 				local CurrentSlope = 3 * (1 - 3 * X2 + 3 * X1) * GuessForT * GuessForT + 2 * (3 * X2 - 6 * X1) * GuessForT + (3 * X1)
 				local CurrentX = ((((1 - 3 * X2 + 3 * X1) * GuessForT + (3 * X2 - 6 * X1)) * GuessForT + (3 * X1)) * GuessForT) - T
-				GuessForT = GuessForT - CurrentX / CurrentSlope
+				GuessForT -= CurrentX / CurrentSlope
 			end
 
 			GuessT = GuessForT
@@ -57,9 +57,9 @@ local function Bezier(X1, Y1, X2, Y2)
 			GuessT = GuessForT
 		else
 			local AB = IntervalStart + 0.1
-			local CurrentX, CurrentT, Index = 0, nil
+			local CurrentX, CurrentT, Index = 0, nil, nil
 
-			while (CurrentX >= 0 and CurrentX or 0 - CurrentX) > 0.0000001 and Index < 10 do
+			while math.abs(CurrentX) > 0.0000001 and Index < 10 do
 				CurrentT = IntervalStart + (AB - IntervalStart) / 2
 				CurrentX = ((((1 - 3 * X2 + 3 * X1) * CurrentT + (3 * X2 - 6 * X1)) * CurrentT + (3 * X1)) * CurrentT) - T
 				if CurrentX > 0 then
@@ -68,7 +68,7 @@ local function Bezier(X1, Y1, X2, Y2)
 					IntervalStart = CurrentT
 				end
 
-				Index = Index + 1
+				Index += 1
 			end
 
 			GuessT = CurrentT
