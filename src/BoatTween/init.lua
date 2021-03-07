@@ -452,14 +452,11 @@ function BoatTween.Create(_, Object, Data)
 					end
 				end
 			else
-				if Reverse then
-					for Property, Lerper in pairs(TweenData) do
-						Object[Property] = Lerper(math.clamp(TweenFunction(1 - ElapsedTime/Time), 0, 1))
-					end
-				else
-					for Property, Lerper in pairs(TweenData) do
-						Object[Property] = Lerper(math.clamp(TweenFunction(ElapsedTime/Time), 0, 1))
-					end
+				local Delta = Reversed and (1 - ElapsedTime/Time) or (ElapsedTime/Time)
+				local Position = math.clamp(TweenFunction(Delta), 0, 1)
+				
+				for Property, Lerper in pairs(TweenData) do
+					Object[Property] = Lerper(Position)
 				end
 			end
 		end)
