@@ -452,7 +452,7 @@ function BoatTween.Create(_, Object, Data)
 					end
 				end
 			else
-				local Delta = Reversed and (1 - ElapsedTime/Time) or (ElapsedTime/Time)
+				local Delta = Reverse and (1 - ElapsedTime/Time) or (ElapsedTime/Time)
 				local Position = math.clamp(TweenFunction(Delta), 0, 1)
 				
 				for Property, Lerper in pairs(TweenData) do
