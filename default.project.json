@@ -1,14 +1,6 @@
 {
-  "name": "BoatTween",
-  "tree": {
-    "$className": "DataModel",
-
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-
-      "BoatTween": {
-        "$path": "src/BoatTween"
-      }
-    }
-  }
+	"name": "BoatTween",
+	"tree": {
+		"$path": "src"
+	}
 }
