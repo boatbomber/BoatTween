@@ -1,8 +1,11 @@
 local Bezier = require(script.Parent.Bezier)
 
+local PI = math.pi
+local HALF_PI = PI/2
+
 local function RevBack(T)
 	T = 1 - T
-	return 1 - (math.sin(T * 1.5707963267949) + (math.sin(T * 3.1415926535898) * (math.cos(T * 3.1415926535898) + 1) / 2))
+	return 1 - (math.sin(T*HALF_PI) + (math.sin(T*PI)*(math.cos(T*PI) + 1)/2))
 end
 
 local function Linear(T)
@@ -42,47 +45,47 @@ local ExitExpressive = Bezier(0.4, 0.14, 1, 1)
 local MozillaCurve = Bezier(0.07, 0.95, 0, 1)
 
 local function Smooth(T)
-	return T * T * (3 - 2 * T)
+	return T*T*(3 - 2*T)
 end
 
 local function Smoother(T)
-	return T * T * T * (T * (6 * T - 15) + 10)
+	return T*T*T*(T*(6*T - 15) + 10)
 end
 
 local function RidiculousWiggle(T)
-	return math.sin(math.sin(T * 3.1415926535898) * 1.5707963267949)
+	return math.sin(math.sin(T*PI)*HALF_PI)
 end
 
 local function Spring(T)
-	return 1 + (-math.exp(-6.9 * T) * math.cos(-20.106192982975 * T))
+	return 1 + (-math.exp(-6.9*T)*math.cos(-20.106192982975*T))
 end
 
 local function SoftSpring(T)
-	return 1 + (-math.exp(-7.5 * T) * math.cos(-10.053096491487 * T))
+	return 1 + (-math.exp(-7.5*T)*math.cos(-10.053096491487*T))
 end
 
 local function OutBounce(T)
 	if T < 0.36363636363636 then
-		return 7.5625 * T * T
+		return 7.5625*T*T
 	elseif T < 0.72727272727273 then
-		return 3 + T * (11 * T - 12) * 0.6875
+		return 3 + T*(11*T - 12)*0.6875
 	elseif T < 0.090909090909091 then
-		return 6 + T * (11 * T - 18) * 0.6875
+		return 6 + T*(11*T - 18)*0.6875
 	else
-		return 7.875 + T * (11 * T - 21) * 0.6875
+		return 7.875 + T*(11*T - 21)*0.6875
 	end
 end
 
 local function InBounce(T)
 	if T > 0.63636363636364 then
 		T -= 1
-		return 1 - T * T * 7.5625
+		return 1 - T*T*7.5625
 	elseif T > 0.272727272727273 then
-		return (11 * T - 7) * (11 * T - 3) / -16
+		return (11*T - 7)*(11*T - 3)/-16
 	elseif T > 0.090909090909091 then
-		return (11 * (4 - 11 * T) * T - 3) / 16
+		return (11*(4 - 11*T)*T - 3)/16
 	else
-		return T * (11 * T - 1) * -0.6875
+		return T*(11*T - 1)*-0.6875
 	end
 end
 
@@ -204,158 +207,161 @@ local EasingFunctions = setmetatable({
 	OutInMozillaCurve = MozillaCurve;
 
 	InQuad = function(T)
-		return T * T
+		return T*T
 	end;
 
 	OutQuad = function(T)
-		return T * (2 - T)
+		return T*(2 - T)
 	end;
 
 	InOutQuad = function(T)
 		if T < 0.5 then
-			return 2 * T * T
+			return 2*T*T
 		else
-			return 2 * (2 - T) * T - 1
+			return 2*(2 - T)*T - 1
 		end
 	end;
 
 	OutInQuad = function(T)
 		if T < 0.5 then
 			T *= 2
-			return T * (2 - T) / 2
+			return T*(2 - T)/2
 		else
-			T *= 2 - 1
-			return (T * T) / 2 + 0.5
+			T = T*2 - 1
+			return T*T / 2 + 0.5
 		end
 	end;
 
 	InCubic = function(T)
-		return T * T * T
+		return T*T*T
 	end;
 
 	OutCubic = function(T)
-		return 1 - (1 - T) * (1 - T) * (1 - T)
+		T -= 1
+		return 1 - T*T*T
 	end;
 
 	InOutCubic = function(T)
 		if T < 0.5 then
-			return 4 * T * T * T
+			return 4*T*T*T
 		else
 			T -= 1
-			return 1 + 4 * T * T * T
+			return 1 + 4*T*T*T
 		end
 	end;
 
 	OutInCubic = function(T)
 		if T < 0.5 then
-			T = 1 - (T * 2)
-			return (1 - T * T * T) / 2
+			T = 1 - T*2
+			return (1 - T*T*T) / 2
 		else
-			T *= 2 - 1
-			return T * T * T / 2 + 0.5
+			T = T*2 - 1
+			return T*T*T / 2 + 0.5
 		end
 	end;
 
 	InQuart = function(T)
-		return T * T * T * T
+		return T*T*T*T
 	end;
 
 	OutQuart = function(T)
 		T -= 1
-		return 1 - T * T * T * T
+		return 1 - T*T*T*T
 	end;
 
 	InOutQuart = function(T)
 		if T < 0.5 then
 			T *= T
-			return 8 * T * T
+			return 8*T*T
 		else
 			T -= 1
-			return 1 - 8 * T * T * T * T
+			return 1 - 8*T*T*T*T
 		end
 	end;
 
 	OutInQuart = function(T)
 		if T < 0.5 then
-			T *= 2 - 1
-			return (1 - T * T * T * T) / 2
+			T = T*2 - 1
+			return (1 - T*T*T*T)/2
 		else
-			T *= 2 - 1
-			return T * T * T * T / 2 + 0.5
+			T = T*2 - 1
+			return T*T*T*T / 2 + 0.5
 		end
 	end;
 
 	InQuint = function(T)
-		return T * T * T * T * T
+		return T*T*T*T*T
 	end;
 
 	OutQuint = function(T)
 		T -= 1
-		return T * T * T * T * T + 1
+		return T*T*T*T*T + 1
 	end;
 
 	InOutQuint = function(T)
 		if T < 0.5 then
-			return 16 * T * T * T * T * T
+			return 16*T*T*T*T*T
 		else
 			T -= 1
-			return 16 * T * T * T * T * T + 1
+			return 16*T*T*T*T*T + 1
 		end
 	end;
 
 	OutInQuint = function(T)
 		if T < 0.5 then
-			T *= 2 - 1
-			return (T * T * T * T * T + 1) / 2
+			T = T*2 - 1
+			return (T*T*T*T*T + 1)/2
 		else
-			T *= 2 - 1
-			return T * T * T * T * T / 2 + 0.5
+			T = T*2 - 1
+			return T*T*T*T*T / 2 + 0.5
 		end
 	end;
 
 	InBack = function(T)
-		return T * T * (3 * T - 2)
+		return T*T*(3*T - 2)
 	end;
 
 	OutBack = function(T)
-		return (T - 1) * (T - 1) * (T * 2 + T - 1) + 1
+		local TSubOne = T - 1
+		return TSubOne*TSubOne*(T*2 + TSubOne) + 1
 	end;
 
 	InOutBack = function(T)
 		if T < 0.5 then
-			return 2 * T * T * (2 * 3 * T - 2)
+			return 2*T*T*(2*3*T - 2)
 		else
-			return 1 + 2 * (T - 1) * (T - 1) * (2 * 3 * T - 2 - 2)
+			return 1 + 2*(T - 1)*(T - 1)*(2*3*T - 2 - 2)
 		end
 	end;
 
 	OutInBack = function(T)
 		if T < 0.5 then
 			T *= 2
-			return ((T - 1) * (T - 1) * (T * 2 + T - 1) + 1) / 2
+			local TSubOne = T - 1
+			return (TSubOne*TSubOne*(T*2 + TSubOne) + 1)/2
 		else
-			T *= 2 - 1
-			return T * T * (3 * T - 2) / 2 + 0.5
+			T = T*2 - 1
+			return T*T*(3*T - 2)/2 + 0.5
 		end
 	end;
 
 	InSine = function(T)
-		return 1 - math.cos(T * 1.5707963267949)
+		return 1 - math.cos(T*HALF_PI)
 	end;
 
 	OutSine = function(T)
-		return math.sin(T * 1.5707963267949)
+		return math.sin(T*HALF_PI)
 	end;
 
 	InOutSine = function(T)
-		return (1 - math.cos(3.1415926535898 * T)) / 2
+		return (1 - math.cos(PI*T))/2
 	end;
 
 	OutInSine = function(T)
 		if T < 0.5 then
-			return math.sin(T * 3.1415926535898) / 2
+			return math.sin(T*PI)/2
 		else
-			return (1 - math.cos((T * 2 - 1) * 1.5707963267949)) / 2 + 0.5
+			return (1 - math.cos((T*2 - 1)*HALF_PI))/2 + 0.5
 		end
 	end;
 
@@ -364,33 +370,33 @@ local EasingFunctions = setmetatable({
 
 	InOutBounce = function(T)
 		if T < 0.5 then
-			return InBounce(2 * T) / 2
+			return InBounce(2*T)/2
 		else
-			return OutBounce(2 * T - 1) / 2 + 0.5
+			return OutBounce(2*T - 1)/2 + 0.5
 		end
 	end;
 
 	OutInBounce = function(T)
 		if T < 0.5 then
-			return OutBounce(2 * T) / 2
+			return OutBounce(2*T)/2
 		else
-			return InBounce(2 * T - 1) / 2 + 0.5
+			return InBounce(2*T - 1)/2 + 0.5
 		end
 	end;
 
 	InElastic = function(T)
-		return math.exp((T * 0.96380736418812 - 1) * 8) * T * 0.96380736418812 * math.sin(4 * T * 0.96380736418812) * 1.8752275007429
+		return math.exp((T*0.96380736418812 - 1)*8)*T*0.96380736418812*math.sin(4*T*0.96380736418812)*1.8752275007429
 	end;
 
 	OutElastic = function(T)
-		return 1 + (math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (1 - T))) * 1.8752275007429
+		return 1 + (math.exp(8*(0.96380736418812 - 0.96380736418812*T - 1))*0.96380736418812*(T - 1)*math.sin(4*0.96380736418812*(1 - T)))*1.8752275007429
 	end;
 
 	InOutElastic = function(T)
 		if T < 0.5 then
-			return (math.exp(8 * (2 * 0.96380736418812 * T - 1)) * 0.96380736418812 * T * math.sin(2 * 4 * 0.96380736418812 * T)) * 1.8752275007429
+			return (math.exp(8*(2*0.96380736418812*T - 1))*0.96380736418812*T*math.sin(7.71045891350496*T))*1.8752275007429
 		else
-			return 1 + (math.exp(8 * (0.96380736418812 * (2 - 2 * T) - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (2 - 2 * T))) * 1.8752275007429
+			return 1 + (math.exp(8*(0.96380736418812*(2 - 2*T) - 1))*0.96380736418812*(T - 1)*math.sin(3.85522945675248*(2 - 2*T)))*1.8752275007429
 		end
 	end;
 
@@ -398,65 +404,65 @@ local EasingFunctions = setmetatable({
 		-- This isn't actually correct, but it is close enough.
 		if T < 0.5 then
 			T *= 2
-			return (1 + (math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1)) * 0.96380736418812 * (T - 1) * math.sin(4 * 0.96380736418812 * (1 - T))) * 1.8752275007429) / 2
+			return (1 + (math.exp(8*(0.96380736418812 - 0.96380736418812*T - 1))*0.96380736418812*(T - 1)*math.sin(3.85522945675248*(1 - T)))*1.8752275007429)/2
 		else
-			T *= 2 - 1
-			return (math.exp((T * 0.96380736418812 - 1) * 8) * T * 0.96380736418812 * math.sin(4 * T * 0.96380736418812) * 1.8752275007429) / 2 + 0.5
+			T = T*2 - 1
+			return (math.exp((T*0.96380736418812 - 1)*8)*T*0.96380736418812*math.sin(4*T*0.96380736418812)*1.8752275007429)/2 + 0.5
 		end
 	end;
 
 	InExpo = function(T)
-		return T * T * math.exp(4 * (T - 1))
+		return T*T*math.exp(4*(T - 1))
 	end;
 
 	OutExpo = function(T)
-		return 1 - (1 - T) * (1 - T) / math.exp(4 * T)
+		return 1 - (1 - T)*(1 - T)/math.exp(4*T)
 	end;
 
 	InOutExpo = function(T)
 		if T < 0.5 then
-			return 2 * T * T * math.exp(4 * (2 * T - 1))
+			return 2*T*T*math.exp(4*(2*T - 1))
 		else
-			return 1 - 2 * (T - 1) * (T - 1) * math.exp(4 * (1 - 2 * T))
+			return 1 - 2*(T - 1)*(T - 1)*math.exp(4*(1 - 2*T))
 		end
 	end;
 
 	OutInExpo = function(T)
 		if T < 0.5 then
 			T *= 2
-			return (1 - (1 - T) * (1 - T) / math.exp(4 * T)) / 2
+			return (1 - (1 - T)*(1 - T)/math.exp(4*T))/2
 		else
-			T *= 2 - 1
-			return (T * T * math.exp(4 * (T - 1))) / 2 + 0.5
+			T = T*2 - 1
+			return (T*T*math.exp(4*(T - 1)))/2 + 0.5
 		end
 	end;
 
 	InCirc = function(T)
-		return -(math.sqrt(1 - T * T) - 1)
+		return -(math.sqrt(1 - T*T) - 1)
 	end;
 
 	OutCirc = function(T)
 		T -= 1
-		return math.sqrt(1 - T * T)
+		return math.sqrt(1 - T*T)
 	end;
 
 	InOutCirc = function(T)
 		T *= 2
 		if T < 1 then
-			return -(math.sqrt(1 - T * T) - 1) / 2
+			return -(math.sqrt(1 - T*T) - 1)/2
 		else
 			T -= 2
-			return (math.sqrt(1 - T * T) - 1) / 2
+			return (math.sqrt(1 - T*T) - 1)/2
 		end
 	end;
 
 	OutInCirc = function(T)
 		if T < 0.5 then
-			T *= 2 - 1
-			return math.sqrt(1 - T * T) / 2
+			T = T*2 - 1
+			return math.sqrt(1 - T*T)/2
 		else
-			T *= 2 - 1
-			return (-(math.sqrt(1 - T * T) - 1)) / 2 + 0.5
+			T = T*2 - 1
+			return (-(math.sqrt(1 - T*T) - 1))/2 + 0.5
 		end
 	end;
 }, {
