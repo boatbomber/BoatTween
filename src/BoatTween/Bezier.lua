@@ -22,10 +22,6 @@ local function Bezier(X1, Y1, X2, Y2)
 	end
 
 	return function(T)
-		if X1 == Y1 and X2 == Y2 then
-			return Linear
-		end
-
 		if T == 0 or T == 1 then
 			return T
 		end
