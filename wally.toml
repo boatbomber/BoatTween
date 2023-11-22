@@ -1,7 +1,7 @@
 [package]
 name = "boatbomber/boattween"
 description = "Powerful and customizable alternative to TweenService"
-version = "1.0.0"
+version = "1.0.1"
 license = "MIT"
 authors = ["boatbomber (https://boatbomber.com)"]
 registry = "https://github.com/upliftgames/wally-index"
